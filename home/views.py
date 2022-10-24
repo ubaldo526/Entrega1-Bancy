@@ -3,6 +3,7 @@ from datetime import datetime
 from django.template import Context, Template, loader
 from django.shortcuts import render, redirect
 import random
+from home.forms import BusquedaFamiliarFormulario, FamiliarFormulario
 
 from home.models import familiar
 
@@ -27,14 +28,7 @@ def mi_template(request):
     return HttpResponse(template_renderizado)
 
 def tu_template(request, nombre):    
-#     cargar_archivo = open(r'C:\Users\UNUMBIO\Documents\Mi Código\Nueva Practica\Django\templates\tu_template.html', 'r')
-    
-#     template = Template(cargar_archivo.read())
-#     cargar_archivo.close()
-#     contexto = Context({'persona': nombre})
-#     template_renderizado = template.render(contexto)
-# Para configurar dónde se buscan los archivos, en settings, DIR, se copia r'dirección
-# de la carpeta templates'
+
     template = loader.get_template('home/tu_template.html')
     template_renderizado = template.render({'persona': nombre})
     
@@ -54,24 +48,38 @@ def prueba_template(request):
 
 def crear_familiar(request):
     if request.method == 'POST':
-        nombre = request.POST.get('nombre')
-        apellido = request.POST.get('apellido')
-        persona = familiar(nombre=nombre, apellido=apellido, edad=random.randrange(1, 99), fecha_creacion=datetime.now())
-        persona.save()
+        
+        formulario = FamiliarFormulario(request.POST)
+        
+        if formulario.is_valid():
+            data = formulario.cleaned_data
+            
+            nombre = data['nombre']
+            apellido = data['apellido']
+            edad = data['edad']
+            fecha_creacion = data.get('fecha_creacion', datetime.now())
+            
+            persona = familiar(nombre=nombre, apellido=apellido, edad=edad, fecha_creacion=fecha_creacion)
+            persona.save()
         
         return redirect('ver_familiares')
+    
+    formulario = FamiliarFormulario()
    
-    return render(request, 'home/crear_familiar.html', {})
+    return render(request, 'home/crear_familiar.html', {'formulario': formulario})
 
 def ver_familiares(request):
     
-    familiares = familiar.objects.all()
-    # template = loader.get_template('ver_familiares.html')
-    # template_renderizado = template.render({'familiares': familiares})
+    nombre = request.GET.get('nombre')
     
-    # return HttpResponse(template_renderizado)
+    if nombre:
+        familiares = familiar.objects.filter(nombre__icontains=nombre)
+    else:
+        familiares = familiar.objects.all()
     
-    return render(request, 'home/ver_familiares.html', {'familiares': familiares})
+    formulario = BusquedaFamiliarFormulario()
+
+    return render(request, 'home/ver_familiares.html', {'familiares': familiares}, {'formulario': formulario})
 
 def index(request):
     
