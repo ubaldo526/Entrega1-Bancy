@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from datetime import datetime
 from django.template import Context, Template, loader
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import random
 
 from home.models import familiar
@@ -52,16 +52,16 @@ def prueba_template(request):
     
     return HttpResponse(template_renderizado)
 
-def crear_familiar(request, nombre, apellido):
-    
-    persona = familiar(nombre=nombre, apellido=apellido, edad=random.randrange(1, 99), fecha_nacimiento=datetime.now())
-    persona.save()
-    
-    # template = loader.get_template('crear_familiar.html')
-    # template_renderizado = template.render({'familiar': persona})
-    
-    # return HttpResponse(template_renderizado)
-    return render(request, 'home/crear_familiar.html', {'familiar': persona})
+def crear_familiar(request):
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        apellido = request.POST.get('apellido')
+        persona = familiar(nombre=nombre, apellido=apellido, edad=random.randrange(1, 99), fecha_creacion=datetime.now())
+        persona.save()
+        
+        return redirect('ver_familiares')
+   
+    return render(request, 'home/crear_familiar.html', {})
 
 def ver_familiares(request):
     
