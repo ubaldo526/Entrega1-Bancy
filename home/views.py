@@ -79,7 +79,7 @@ def ver_familiares(request):
     
     formulario = BusquedaFamiliarFormulario()
 
-    return render(request, 'home/ver_familiares.html', {'familiares': familiares}, {'formulario': formulario})
+    return render(request, 'home/ver_familiares.html', {'familiares': familiares,'formulario': formulario})
 
 def index(request):
     
