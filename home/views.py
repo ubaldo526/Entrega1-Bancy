@@ -70,7 +70,7 @@ def crear_familiar(request):
 
 def ver_familiares(request):
     
-    nombre = request.GET.get('nombre')
+    nombre = request.GET.get('nombre', None)
     
     if nombre:
         familiares = familiar.objects.filter(nombre__icontains=nombre)
