@@ -1,0 +1,32 @@
+{% extends 'home/base.html' %}
+
+{% block title_pagina %}
+<title>Ver Autos</title>
+{% endblock title_pagina %}
+
+
+{% block mi_contenido %}
+<a class="navbar-brand" href={%url 'crear_auto' %}>Crear Auto</a>
+<p>Listado de Autos:</p>
+<form action={% url 'ver_autos' %} method="GET">
+    
+    {{formulario}}
+    
+    <button>Buscar</button>
+</form>
+<p> 
+    {% if object_list %}
+    
+    {% for auto in object_list %}
+    <li>        
+        <a href={%url 'ver_auto' auto.id %}>{{auto}}</a>
+        <a href={%url 'editar_auto' auto.id %}>Editar</a>
+        <a href={%url 'eliminar_auto' auto.id %}>Eliminar</a> 
+    </li>
+    {% endfor %}
+    
+    {% else %}
+    <p>No se encontraron resultados</p>
+    {% endif %}
+</p>
+{% endblock mi_contenido %}
