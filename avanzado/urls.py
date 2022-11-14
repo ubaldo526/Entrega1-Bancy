@@ -7,7 +7,7 @@ urlpatterns = [
     path('mascotas/crear/', views.crear_mascota, name='crear_mascota'),
     path('mascotas/editar/<int:id>', views.editar_mascota, name='editar_mascota'),
     path('mascotas/eliminar/<int:id>', views.eliminar_mascota, name='eliminar_mascota'),
-        
+    path('about/', views.about, name='about'),    
     # version con clases basadas en vistas
     path('autos/', views.ListaAutos.as_view(), name='ver_autos'),
     path('autos/crear/', views.CrearAuto.as_view(), name='crear_auto'),

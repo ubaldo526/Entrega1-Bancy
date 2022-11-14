@@ -99,3 +99,9 @@ class EliminarAuto(LoginRequiredMixin, DeleteView):
 class VerAuto(DetailView):
     model = Auto
     template_name = 'avanzado/ver_auto.html'
+    
+    
+def about(request):
+    
+    
+    return render(request, 'avanzado/about.html')
